@@ -14,3 +14,7 @@ dependencies = [
 dev = [
     "pytest>=9.2.0",
 ]
+
+[tool.pytest.ini_options]
+# Lets tests import the `app` package from the backend folder.
+pythonpath = ["."]
