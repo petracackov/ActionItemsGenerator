@@ -52,6 +52,15 @@ Keys are snake_case. Swift: `keyDecodingStrategy = .convertFromSnakeCase`, `date
 
 ## Endpoints
 
+### `GET /health`
+
+Liveness check: proves the server is up.
+
+**Response: `200 OK`**
+```json
+{ "status": "ok" }
+```
+
 ### `POST /notes/extract`
 
 Submit raw notes. Returns the saved note with its extracted action items.
