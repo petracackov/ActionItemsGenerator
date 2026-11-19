@@ -13,9 +13,14 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BACKEND_DIR / ".env")
 
 
+DEFAULT_GROQ_MODEL = "openai/gpt-oss-20b"
+
+
 @dataclass(frozen=True)
 class Settings:
     groq_api_key: str
+    groq_model: str
+    log_dir: Path
 
 
 def load_settings() -> Settings:
@@ -26,4 +31,6 @@ def load_settings() -> Settings:
             "GROQ_API_KEY is missing. "
             "Copy backend/.env.example to backend/.env and add your Groq key."
         )
-    return Settings(groq_api_key=key)
+    model = os.getenv("GROQ_MODEL", "").strip() or DEFAULT_GROQ_MODEL
+    log_dir = Path(os.getenv("LOG_DIR", "").strip() or BACKEND_DIR / "logs")
+    return Settings(groq_api_key=key, groq_model=model, log_dir=log_dir)
