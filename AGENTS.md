@@ -19,6 +19,11 @@ Take-home test project for a job application. Timebox: 4 hours (graded on what's
 - **Docs location:** put all documentation and plans in the `Documentation/` folder. `AGENTS.md` holds only rules and pointers to those files, never documentation content. Exception: the root `README.md`, which holds only what the assignment requires. Add nothing extra unless the user asks.
 - **Document as you go:** document features, stack, libraries and key decisions in `Documentation/`. Always ask the user before adding or changing any documentation.
 
+## Git
+
+- **Branches, no PRs:** do each step on a `feature/<name>` branch, then merge it into `main` directly. No pull requests (single developer).
+- **Keep branches:** never delete a branch after merging it.
+
 ## Project skills
 
 - Skills live in `.claude/skills/<name>/SKILL.md`. Run `/list-skills` to see them all.
