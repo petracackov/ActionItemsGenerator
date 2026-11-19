@@ -13,7 +13,14 @@ How to run and try the project locally.
 
 ## 1. Backend
 
-_TBD_
+```bash
+cd backend
+cp .env.example .env    # then put your Groq key in .env
+uv sync                 # installs Python 3.12 and all libraries
+uv run uvicorn app.main:app --reload
+```
+
+Check: http://127.0.0.1:8000/health returns `{"status":"ok"}`. API docs: http://127.0.0.1:8000/docs.
 
 ## 2. Mac app
 
@@ -26,4 +33,10 @@ _TBD_
 
 ## 4. Tests
 
-_TBD_
+Backend (from `backend/`):
+
+```bash
+uv run pytest
+```
+
+Mac app: _TBD_

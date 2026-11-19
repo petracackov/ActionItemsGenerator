@@ -17,5 +17,8 @@ DerivedData/
 # macOS
 .DS_Store
 
+# Personal learning notes (not part of the submission)
+Notes/
+
 # Claude Code local settings
 .claude/settings.local.json
