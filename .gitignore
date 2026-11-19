@@ -1,0 +1,21 @@
+# Secrets
+.env
+
+# Backend generated files
+backend/.venv/
+backend/data.db
+backend/logs/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcuserstate
+
+# macOS
+.DS_Store
+
+# Claude Code local settings
+.claude/settings.local.json
