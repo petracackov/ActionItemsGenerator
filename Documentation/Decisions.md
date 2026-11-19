@@ -100,3 +100,4 @@ Open questions for the product owner. Until answered, these defaults apply (deta
 | Retry on unusable output? | **No retry** | A retry roughly doubles the time and breaks the 2s goal. The user can resubmit. |
 | Due dates: as written or converted? | **As written** ("by Friday") | Converting relative dates is guesswork and could create wrong data. |
 | No action items found: save the note? | **Save it** with an empty list | It's a valid result, and it keeps the audit trail complete. |
+| Note author takes a task ("I need to check…"): who's the assignee? | **"me"** as written. `null` only when no specific person owns it ("someone", "no owner yet", "we") | `null` would make the item look unowned when the author owns it. In v2, "me" can be resolved to the logged-in user. |

@@ -22,8 +22,9 @@ status updates and opinions.
 
 For each action item return:
 - text: a short task description in plain English.
-- assignee: the person's name exactly as written in the notes. Use null if no
-  person is named (for example "someone", "no owner yet", "I", "me", "we").
+- assignee: the person's name exactly as written in the notes. If the note's
+  author takes the task ("I", "me"), use "me". Use null if no specific person
+  owns it (for example "someone", "nobody", "no owner yet", "we").
 - due: the deadline exactly as written (for example "Friday", "next week").
   Use null if no deadline is mentioned. Never convert or invent dates.
 

@@ -6,12 +6,20 @@ from fastapi import FastAPI, Request
 
 from app.config import load_settings
 from app.errors import register_error_handlers
+from app.extraction import Extractor, make_groq_client
+from app.logger import setup_logging
+from app.routes import router
 
 # Runs once at startup. Stops the server immediately if config is missing.
 settings = load_settings()
+setup_logging(settings.log_dir)
 
 app = FastAPI(title="Action Item Extractor")
 register_error_handlers(app)
+app.include_router(router)
+
+# One shared Extractor for all requests, read by routes via get_extractor().
+app.state.extractor = Extractor(make_groq_client(settings.groq_api_key), settings.groq_model)
 
 
 @app.middleware("http")
