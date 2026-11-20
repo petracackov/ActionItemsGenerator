@@ -44,15 +44,16 @@ def found(keywords: list[str], item_texts: list[str]) -> bool:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--runs", type=int, default=3)
+    parser.add_argument("--effort", default="low", help="reasoning effort: low, medium or high")
     args = parser.parse_args()
 
     settings = load_settings()
     setup_logging(Path(tempfile.mkdtemp(prefix="eval-logs-")))  # keep eval out of logs/
-    extractor = Extractor(make_groq_client(settings.groq_api_key), settings.groq_model)
+    extractor = Extractor(make_groq_client(settings.groq_api_key), settings.groq_model, args.effort)
     samples = load_samples()
     expected = json.loads(EXPECTED.read_text())["samples"]
 
-    print(f"Model: {settings.groq_model} | runs per sample: {args.runs}\n")
+    print(f"Model: {settings.groq_model} | effort: {args.effort} | runs per sample: {args.runs}\n")
     total_hits = total_required = 0
     durations: list[float] = []
 
