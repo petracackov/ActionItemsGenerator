@@ -31,6 +31,8 @@ _TBD_
 1. Paste one of the sample notes from [Assignment.md](Assignment.md#sample-input) and click Extract.
 2. Mark an item done. Restart the backend and check that it's still done.
 
+Data is stored in `backend/data.db`. To start fresh, stop the backend and delete that file.
+
 ## 4. Tests
 
 Backend (from `backend/`):
