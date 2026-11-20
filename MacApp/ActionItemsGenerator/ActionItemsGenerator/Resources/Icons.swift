@@ -13,4 +13,5 @@ enum Icons {
     static let notDone = "circle"
     static let assignee = "person"
     static let due = "calendar"
+    static let warning = "exclamationmark.triangle"
 }
