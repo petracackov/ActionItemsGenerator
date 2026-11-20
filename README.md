@@ -6,7 +6,13 @@ A macOS app where you paste raw meeting notes. A backend sends them to an LLM an
 
 ## 1. How to run the project
 
-See [Documentation/Setup.md](Documentation/Setup.md).
+Needs macOS 26+, Xcode 27 and a free Groq API key. From the project folder, run:
+
+```bash
+./setup.sh
+```
+
+It checks your tools, sets up the backend and tells you what to do for anything missing. Full steps: [Documentation/Setup.md](Documentation/Setup.md).
 
 ## 2. What I would do differently with a full week
 
@@ -20,8 +26,8 @@ See [Documentation/Setup.md](Documentation/Setup.md).
 
 ## 3. One decision I'm not fully confident about
 
-_TBD_
+**The backend choice (Python + FastAPI + SQLite).** I'm not a backend developer, so I picked a stack that is common, well documented and quick to set up, rather than one I'd chosen after comparing the options. It works for this scope, but I'd want more analysis before committing to it for a real product: how it scales and how it's hosted, and whether a managed backend (like Supabase alone) or a Swift server would fit the team better.
 
 ## 4. One thing I deliberately skipped, and why
 
-_TBD_
+**A real hosted database and authentication.** Notes are stored in a local SQLite file and everyone is the same `local-user`. There wasn't enough time to set up hosting and login properly in the timebox, and both are easy to add later: the database is one connection string (`DATABASE_URL`), and auth lives in one function (`current_user()`) while every note already stores `created_by`. See [Architecture.md → v2](Documentation/Architecture.md#v2-post-mvp-auth--hosted-database).
