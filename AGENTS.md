@@ -50,9 +50,10 @@ Take-home test project for a job application. Timebox: 4 hours (graded on what's
 - ViewModel state uses `@Observable`, not `ObservableObject`/`@Published`. ViewModels are not `final` by default.
 - Never pass a ViewModel into another view. Each screen or component creates and owns its own (`@State private var viewModel = XViewModel()`). Child views get plain values, bindings or closures, never a parent's ViewModel.
 - View-local UI state lives in `@State`.
-- Concurrency: the target's default actor isolation is `MainActor`, so don't annotate types with `@MainActor`. Mark non-UI work `nonisolated` explicitly.
+- Concurrency: the target's default actor isolation is `MainActor`, so don't add `@MainActor` to types or methods. Mark non-UI work `nonisolated` explicitly.
+- ViewModel state (e.g. `loadState`) changes only through a private `func setState(_:)`, never by assigning the property directly.
 - async/await by default. No Combine unless required.
-- Don't use `.task` or make API calls in `.onAppear`. Start async work from ViewModel-owned `Task`s and cancel long-running ones explicitly.
+- Don't use `.task` or make API calls in `.onAppear`. Start async work in the ViewModel with a plain `Task { ... }`. Don't store tasks in properties (e.g. `private var loadTask: Task<Void, Never>?`) unless asked.
 - Shared/global state must not contain navigation or presentation concerns.
 
 ### Error handling

@@ -13,23 +13,42 @@ struct NotesSplitView: View {
 
     var body: some View {
         NavigationSplitView {
+            sidebar
+                .navigationSplitViewColumnWidth(min: 220, ideal: 280)
+                .toolbar {
+                    ToolbarItem {
+                        Button(
+                            Strings.newNote,
+                            systemImage: Icons.add,
+                            action: viewModel.startNewNote
+                        )
+                    }
+                }
+        } detail: {
+            detail
+        }
+    }
+
+    @ViewBuilder
+    private var sidebar: some View {
+        switch viewModel.loadState {
+        case .loading:
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        case .failed(let error):
+            ContentUnavailableView {
+                Label(Strings.loadNotesErrorTitle, systemImage: Icons.warning)
+            } description: {
+                Text(error.message)
+            } actions: {
+                Button(Strings.tryAgain, action: viewModel.loadNotes)
+            }
+        case .loaded:
             NoteListView(
                 notes: viewModel.notes,
                 selectedNote: viewModel.selectedNote,
                 onSelect: viewModel.select
             )
-            .navigationSplitViewColumnWidth(min: 220, ideal: 280)
-            .toolbar {
-                ToolbarItem {
-                    Button(
-                        Strings.newNote,
-                        systemImage: Icons.add,
-                        action: viewModel.startNewNote
-                    )
-                }
-            }
-        } detail: {
-            detail
         }
     }
 

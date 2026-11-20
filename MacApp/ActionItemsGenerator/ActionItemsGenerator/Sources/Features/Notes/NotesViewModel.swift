@@ -20,10 +20,28 @@ class NotesViewModel {
     /// Whether the detail pane shows the new-note editor. Local UI state, separate from the selection.
     private(set) var isCreatingNote = false
 
+    private(set) var loadState: LoadState = .loading
+
     @ObservationIgnored private var cancellables = Set<AnyCancellable>()
 
     init() {
         subscribeToChanges()
+        loadNotes()
+    }
+
+    func loadNotes() {
+        setState(.loading)
+
+        Task {
+            do throws(APIError) {
+                let request = APIRequest(endpoint: .notes)
+                let response = try await APIManager.shared.performRequest(request, dataType: NotesResponse.self)
+                notesStore.replaceNotes(with: response.notes)
+                setState(.loaded)
+            } catch {
+                setState(.failed(error))
+            }
+        }
     }
 
     func startNewNote() {
@@ -34,6 +52,7 @@ class NotesViewModel {
     func select(_ note: Note) {
         notesStore.select(note)
     }
+
 
     // MARK: - Private
 
@@ -52,6 +71,10 @@ class NotesViewModel {
             .store(in: &cancellables)
     }
 
+    private func setState(_ state: LoadState) {
+        self.loadState = state
+    }
+
     /// Selecting a note (a click in the list, or a just-created note) leaves the new-note editor.
     private func updateSelectedNote(_ note: Note?) {
         selectedNote = note
@@ -62,7 +85,6 @@ class NotesViewModel {
     }
 
     /// Takes the store's latest notes.
-    @MainActor
     private func update(_ newNotes: [Note]) {
         notes = newNotes
     }

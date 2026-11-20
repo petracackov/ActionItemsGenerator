@@ -22,6 +22,9 @@ enum Strings {
     static let noActionItems = "No action items found."
     static let originalNotes = "Original Notes"
 
+    static let loadNotesErrorTitle = "Couldn't Load Notes"
+    static let tryAgain = "Try Again"
+
     static let cannotReachServer = "Can't reach the server at localhost:8000."
     static let unexpectedError = "Something went wrong. Please try again."
 }
