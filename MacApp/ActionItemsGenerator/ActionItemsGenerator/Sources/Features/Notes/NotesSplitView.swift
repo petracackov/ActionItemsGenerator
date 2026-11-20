@@ -58,7 +58,9 @@ struct NotesSplitView: View {
         if viewModel.isCreatingNote {
             NewNoteView()
         } else if let note = viewModel.selectedNote {
+            // New identity per note, so the detail gets a fresh ViewModel for each note.
             NoteDetailView(note: note)
+                .id(note.id)
         } else {
             ContentUnavailableView(
                 Strings.noSelectionTitle,

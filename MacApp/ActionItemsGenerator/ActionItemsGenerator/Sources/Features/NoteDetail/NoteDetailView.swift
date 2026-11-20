@@ -9,12 +9,16 @@ import SwiftUI
 
 /// Shows a note's action items and its raw text as submitted.
 struct NoteDetailView: View {
-    let note: Note
+    @State private var viewModel: NoteDetailViewModel
+
+    init(note: Note) {
+        _viewModel = State(initialValue: NoteDetailViewModel(note: note))
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text(note.createdAtString)
+                Text(viewModel.note.createdAtString)
                     .foregroundStyle(.secondary)
                 actionItems
                 originalNotes
@@ -22,19 +26,25 @@ struct NoteDetailView: View {
             .padding(24)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle(note.title ?? Strings.untitledNote)
+        .navigationTitle(viewModel.note.title ?? Strings.untitledNote)
     }
 
     private var actionItems: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(Strings.actionItems)
                 .font(.title3.bold())
-            if note.actionItems.isEmpty {
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundStyle(.red)
+            }
+            if viewModel.note.actionItems.isEmpty {
                 Text(Strings.noActionItems)
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(note.actionItems) { item in
-                    ActionItemRowView(item: item)
+                ForEach(viewModel.note.actionItems) { item in
+                    ActionItemRowView(item: item) {
+                        viewModel.toggleDone(for: item)
+                    }
                 }
             }
         }
@@ -44,7 +54,7 @@ struct NoteDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(Strings.originalNotes)
                 .font(.title3.bold())
-            Text(note.text)
+            Text(viewModel.note.text)
                 .font(.body.monospaced())
                 .textSelection(.enabled)
                 .padding(12)
