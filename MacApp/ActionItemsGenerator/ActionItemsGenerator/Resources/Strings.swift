@@ -24,6 +24,7 @@ enum Strings {
 
     static let loadNotesErrorTitle = "Couldn't Load Notes"
     static let tryAgain = "Try Again"
+    static let reload = "Reload"
 
     static let cannotReachServer = "Can't reach the server at localhost:8000."
     static let unexpectedError = "Something went wrong. Please try again."

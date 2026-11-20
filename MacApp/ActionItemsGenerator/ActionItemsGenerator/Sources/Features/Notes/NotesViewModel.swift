@@ -22,6 +22,16 @@ class NotesViewModel {
 
     private(set) var loadState: LoadState = .loading
 
+    /// True while notes are loading, to disable the reload button.
+    var isLoading: Bool {
+        switch loadState {
+        case .loading:
+            true
+        case .failed, .loaded:
+            false
+        }
+    }
+
     @ObservationIgnored private var cancellables = Set<AnyCancellable>()
 
     init() {

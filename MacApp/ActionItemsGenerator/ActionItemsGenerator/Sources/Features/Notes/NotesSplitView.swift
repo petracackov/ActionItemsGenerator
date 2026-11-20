@@ -17,6 +17,9 @@ struct NotesSplitView: View {
                 .navigationSplitViewColumnWidth(min: 220, ideal: 280)
                 .toolbar {
                     ToolbarItem {
+                        reloadButton
+                    }
+                    ToolbarItem {
                         Button(
                             Strings.newNote,
                             systemImage: Icons.add,
@@ -28,6 +31,18 @@ struct NotesSplitView: View {
             detail
         }
         .frame(minWidth: 720, minHeight: 460)
+    }
+
+    /// Shows a spinner in place of the icon while notes load. ⌘R reloads too.
+    @ViewBuilder
+    private var reloadButton: some View {
+        if viewModel.isLoading {
+            ProgressView()
+                .controlSize(.small)
+        } else {
+            Button(Strings.reload, systemImage: Icons.reload, action: viewModel.loadNotes)
+                .keyboardShortcut("r", modifiers: .command)
+        }
     }
 
     @ViewBuilder

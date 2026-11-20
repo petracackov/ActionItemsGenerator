@@ -14,4 +14,5 @@ enum Icons {
     static let assignee = "person"
     static let due = "calendar"
     static let warning = "exclamationmark.triangle"
+    static let reload = "arrow.clockwise"
 }
