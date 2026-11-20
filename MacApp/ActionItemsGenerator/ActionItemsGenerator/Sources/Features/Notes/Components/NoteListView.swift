@@ -10,7 +10,8 @@ import SwiftUI
 struct NoteListView: View {
 
     let notes: [Note]
-    @Binding var selection: SelectionType?
+    let selectedNote: Note?
+    let onSelect: (Note) -> Void
 
     var body: some View {
         if notes.isEmpty {
@@ -20,18 +21,33 @@ struct NoteListView: View {
                 description: Text(Strings.noNotesMessage)
             )
         } else {
-            List(notes, selection: $selection) { note in
-                NoteRowView(note: note)
-                    .tag(SelectionType.note(note))
+            List(notes) { note in
+                Button {
+                    onSelect(note)
+                } label: {
+                    NoteRowView(note: note)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(.rect)
+                    
+                }
+                .buttonStyle(.plain)
+                .listRowBackground(rowBackground(for: note))
+                .padding(.horizontal)
             }
         }
+    }
+
+    private func rowBackground(for note: Note) -> some View {
+        RoundedRectangle(cornerRadius: 6)
+            .fill(note.id == selectedNote?.id ? AnyShapeStyle(.selection) : AnyShapeStyle(.clear))
+            .padding(.horizontal)
     }
 }
 
 #Preview {
-    NoteListView(notes: Note.samples, selection: .constant(nil))
+    NoteListView(notes: Note.samples, selectedNote: Note.samples.first, onSelect: { _ in })
 }
 
 #Preview("Empty") {
-    NoteListView(notes: [], selection: .constant(nil))
+    NoteListView(notes: [], selectedNote: nil, onSelect: { _ in })
 }

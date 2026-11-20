@@ -9,26 +9,25 @@ import SwiftUI
 
 struct NotesSplitView: View {
 
-    @State private var viewModel: NotesViewModel
-
-    /// `notes` is only for previews. The app starts empty.
-    init(notes: [Note] = []) {
-        _viewModel = .init(initialValue: NotesViewModel(notes: notes))
-    }
+    @State private var viewModel = NotesViewModel()
 
     var body: some View {
         NavigationSplitView {
-            NoteListView(notes: viewModel.notes, selection: $viewModel.selection)
-                .navigationSplitViewColumnWidth(min: 220, ideal: 280)
-                .toolbar {
-                    ToolbarItem {
-                        Button(
-                            Strings.newNote,
-                            systemImage: Icons.add,
-                            action: viewModel.startNewNote
-                        )
-                    }
+            NoteListView(
+                notes: viewModel.notes,
+                selectedNote: viewModel.selectedNote,
+                onSelect: viewModel.select
+            )
+            .navigationSplitViewColumnWidth(min: 220, ideal: 280)
+            .toolbar {
+                ToolbarItem {
+                    Button(
+                        Strings.newNote,
+                        systemImage: Icons.add,
+                        action: viewModel.startNewNote
+                    )
                 }
+            }
         } detail: {
             detail
         }
@@ -36,12 +35,11 @@ struct NotesSplitView: View {
 
     @ViewBuilder
     private var detail: some View {
-        switch viewModel.selection {
-        case .note(let note):
-            NoteDetailView(note: note)
-        case .newNote:
+        if viewModel.isCreatingNote {
             NewNoteView()
-        case nil:
+        } else if let note = viewModel.selectedNote {
+            NoteDetailView(note: note)
+        } else {
             ContentUnavailableView(
                 Strings.noSelectionTitle,
                 systemImage: Icons.note,
@@ -52,7 +50,8 @@ struct NotesSplitView: View {
 }
 
 #Preview {
-    NotesSplitView(notes: Note.samples)
+    let _ = Note.samples.reversed().forEach(NotesStore.shared.add)
+    NotesSplitView()
 }
 
 #Preview("Empty") {

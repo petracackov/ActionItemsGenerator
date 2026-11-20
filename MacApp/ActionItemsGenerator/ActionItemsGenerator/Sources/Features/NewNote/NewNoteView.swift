@@ -8,25 +8,50 @@
 import SwiftUI
 
 struct NewNoteView: View {
-    
+
     @State private var viewModel = NewNoteViewModel()
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 12) {
-            TextEditor(text: $viewModel.draftText)
-                .textInputFormattingControlVisibility(.visible, for: .accessoryBar)
-                .scrollContentBackground(.hidden)
-                .padding(8)
-                .background(.quaternary, in: .rect(cornerRadius: 8))
-                .overlay(alignment: .topLeading) {
-                    if viewModel.isDraftEmpty {
-                        Text(Strings.newNotePlaceholder)
-                            .foregroundStyle(.tertiary)
-                            .padding(.horizontal, 13)
-                            .padding(.vertical, 8)
-                            .allowsHitTesting(false)
-                    }
+            editorView()
+            actionsRow()
+        }
+        .padding(24)
+        .navigationTitle(Strings.newNote)
+    }
+
+    private func editorView() -> some View {
+        TextEditor(text: $viewModel.draftText)
+            .textInputFormattingControlVisibility(.visible, for: .accessoryBar)
+            .scrollContentBackground(.hidden)
+            .padding(8)
+            .background(.quaternary, in: .rect(cornerRadius: 8))
+            .overlay(alignment: .topLeading) {
+                if viewModel.isDraftEmpty {
+                    Text(Strings.newNotePlaceholder)
+                        .foregroundStyle(.tertiary)
+                        .padding(.horizontal, 13)
+                        .padding(.vertical, 8)
+                        .allowsHitTesting(false)
                 }
+            }
+            .disabled(viewModel.isExtracting)
+    }
+
+    private func actionsRow() -> some View {
+        HStack(spacing: 12) {
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundStyle(.red)
+            }
+
+            Spacer()
+
+            if viewModel.isExtracting {
+                ProgressView()
+                    .controlSize(.small)
+            }
+
             Button(Strings.extract) {
                 viewModel.extract()
             }
@@ -34,8 +59,6 @@ struct NewNoteView: View {
             .keyboardShortcut(.return, modifiers: .command)
             .disabled(!viewModel.canExtract)
         }
-        .padding(24)
-        .navigationTitle(Strings.newNote)
     }
 }
 
