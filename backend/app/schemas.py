@@ -7,7 +7,7 @@ into them either succeeds or raises a ValidationError.
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, field_validator
 
 MAX_NOTE_CHARS = 10_000
 MAX_ITEMS = 50
@@ -74,6 +74,14 @@ class ExtractRequest(BaseModel):
     text: str
 
 
+class MarkDoneRequest(BaseModel):
+    # forbid: items are immutable, so {"done": true, "text": "..."} is rejected (422),
+    # not silently ignored. StrictBool: only true/false, not "yes" or 1.
+    model_config = ConfigDict(extra="forbid")
+
+    done: StrictBool
+
+
 class ActionItemOut(BaseModel):
     id: UUID
     text: str
@@ -87,3 +95,8 @@ class NoteOut(BaseModel):
     text: str
     created_at: datetime
     action_items: list[ActionItemOut]
+
+
+class NotesOut(BaseModel):
+    # Wrapped in an object so fields like paging can be added later without breaking clients.
+    notes: list[NoteOut]
