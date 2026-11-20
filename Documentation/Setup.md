@@ -11,6 +11,18 @@ How to run and try the project locally.
   ```
 - A Groq API key: create a free one at [console.groq.com/keys](https://console.groq.com/keys), or use the one sent with the submission. It goes in the backend's `.env` file, which is never committed.
 
+## Quick start
+
+From the project folder:
+
+```bash
+./setup.sh
+```
+
+It checks macOS, Xcode and uv, creates `backend/.env` and asks for the Groq key, checks the key with Groq, and installs the backend libraries. For anything missing it prints what to do. When everything passes, it can open the Xcode project and start the backend. Safe to run again.
+
+The steps below do the same by hand.
+
 ## 1. Backend
 
 ```bash
@@ -27,7 +39,7 @@ Check: http://127.0.0.1:8000/health returns `{"status":"ok"}`. API docs: http://
 Start the backend first (step 1). The app talks to it at `http://127.0.0.1:8000`.
 
 1. Open `MacApp/ActionItemsGenerator/ActionItemsGenerator.xcodeproj` in Xcode.
-2. Signing: select the **ActionItemsGenerator** target → **Signing & Capabilities** → pick your own **Team**, or choose **Sign to Run Locally**. The project is set up with the author's team, which won't work on another Mac.
+2. Signing: the project is set up with the author's team, which won't work on another Mac. Select the **ActionItemsGenerator** target → **Signing & Capabilities** → pick whatever **Team** you have (automatic signing is fine), or choose **Sign to Run Locally**.
 3. Run with **⌘R**.
 
 If the backend isn't running, the sidebar shows "Can't reach the server. Check that the backend is running." with a **Try Again** button.
