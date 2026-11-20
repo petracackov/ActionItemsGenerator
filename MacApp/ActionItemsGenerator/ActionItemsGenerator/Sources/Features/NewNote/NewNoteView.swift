@@ -22,13 +22,14 @@ struct NewNoteView: View {
 
     private func editorView() -> some View {
         TextEditor(text: $viewModel.draftText)
-            .textInputFormattingControlVisibility(.visible, for: .accessoryBar)
+            .font(.body.monospaced())
             .scrollContentBackground(.hidden)
             .padding(8)
             .background(.quaternary, in: .rect(cornerRadius: 8))
             .overlay(alignment: .topLeading) {
                 if viewModel.isDraftEmpty {
                     Text(Strings.newNotePlaceholder)
+                        .font(.body.monospaced())
                         .foregroundStyle(.tertiary)
                         .padding(.horizontal, 13)
                         .padding(.vertical, 8)

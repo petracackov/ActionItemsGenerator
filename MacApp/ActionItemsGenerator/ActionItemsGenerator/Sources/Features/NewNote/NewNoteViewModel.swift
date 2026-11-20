@@ -12,17 +12,18 @@ import Observation
 class NewNoteViewModel {
 
     private let notesStore = NotesStore.shared
-    var draftText = AttributedString()
+    /// Plain text. Markdown typed here (e.g. `**bold**`) is sent as is and rendered in the note detail.
+    var draftText = ""
 
     private(set) var isExtracting = false
     private(set) var errorMessage: String?
 
     var isDraftEmpty: Bool {
-        draftText.characters.isEmpty
+        draftText.isEmpty
     }
 
     var canExtract: Bool {
-        !isExtracting && !plainText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        !isExtracting && !draftText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     /// Sends the draft to `POST /notes/extract` and adds the saved note to `NotesStore`.
@@ -32,7 +33,7 @@ class NewNoteViewModel {
         Task {
             defer { isExtracting = false }
             do throws(APIError) {
-                let request = APIRequest(endpoint: .extract(text: plainText))
+                let request = APIRequest(endpoint: .extract(text: draftText))
                 let note = try await APIManager.shared.performRequest(request, dataType: Note.self)
                 notesStore.add(note)
                 notesStore.select(note)
@@ -40,12 +41,5 @@ class NewNoteViewModel {
                 errorMessage = error.message
             }
         }
-    }
-
-    // MARK: - Private
-
-    /// The backend takes plain text, so rich text formatting is dropped here.
-    private var plainText: String {
-        String(draftText.characters)
     }
 }

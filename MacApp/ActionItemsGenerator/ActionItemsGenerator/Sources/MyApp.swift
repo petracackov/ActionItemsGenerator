@@ -6,8 +6,5 @@ import SwiftUI
             NotesSplitView()
         }
         .windowResizability(.contentMinSize)
-        .commands {
-            TextFormattingCommands()
-        }
     }
 }
