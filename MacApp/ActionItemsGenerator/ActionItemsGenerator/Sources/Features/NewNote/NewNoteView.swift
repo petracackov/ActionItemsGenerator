@@ -14,14 +14,13 @@ struct NewNoteView: View {
     var body: some View {
         VStack(alignment: .trailing, spacing: 12) {
             TextEditor(text: $viewModel.draftText)
-                .font(.body.monospaced())
+                .textInputFormattingControlVisibility(.visible, for: .accessoryBar)
                 .scrollContentBackground(.hidden)
                 .padding(8)
                 .background(.quaternary, in: .rect(cornerRadius: 8))
                 .overlay(alignment: .topLeading) {
-                    if viewModel.draftText.isEmpty {
+                    if viewModel.isDraftEmpty {
                         Text(Strings.newNotePlaceholder)
-                            .font(.body.monospaced())
                             .foregroundStyle(.tertiary)
                             .padding(.horizontal, 13)
                             .padding(.vertical, 8)

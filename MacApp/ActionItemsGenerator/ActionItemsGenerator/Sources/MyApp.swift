@@ -5,5 +5,8 @@ import SwiftUI
         WindowGroup {
             NotesSplitView()
         }
+        .commands {
+            TextFormattingCommands()
+        }
     }
 }

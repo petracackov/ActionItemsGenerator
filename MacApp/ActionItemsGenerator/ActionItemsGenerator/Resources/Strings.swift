@@ -11,7 +11,7 @@ enum Strings {
     static let newNote = "New Note"
     static let untitledNote = "Untitled note"
     static let extract = "Extract"
-    static let newNotePlaceholder = "Paste your meeting notes here…"
+    static let newNotePlaceholder = "Add your meeting notes…"
 
     static let noNotesTitle = "No Notes Yet"
     static let noNotesMessage = "Click + to add your first meeting notes."

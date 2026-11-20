@@ -10,10 +10,14 @@ import Observation
 
 @Observable
 class NewNoteViewModel {
-    var draftText = ""
+    var draftText = AttributedString()
+
+    var isDraftEmpty: Bool {
+        draftText.characters.isEmpty
+    }
 
     var canExtract: Bool {
-        !draftText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        !String(draftText.characters).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     func extract() {
