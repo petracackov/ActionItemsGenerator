@@ -21,6 +21,7 @@ class Settings:
     groq_api_key: str
     groq_model: str
     log_dir: Path
+    database_url: str
 
 
 def load_settings() -> Settings:
@@ -33,4 +34,6 @@ def load_settings() -> Settings:
         )
     model = os.getenv("GROQ_MODEL", "").strip() or DEFAULT_GROQ_MODEL
     log_dir = Path(os.getenv("LOG_DIR", "").strip() or BACKEND_DIR / "logs")
-    return Settings(groq_api_key=key, groq_model=model, log_dir=log_dir)
+    # SQLite file next to the server. v2: a Postgres URL here, no code change.
+    database_url = os.getenv("DATABASE_URL", "").strip() or f"sqlite:///{BACKEND_DIR / 'data.db'}"
+    return Settings(groq_api_key=key, groq_model=model, log_dir=log_dir, database_url=database_url)

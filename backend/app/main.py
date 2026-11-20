@@ -5,6 +5,7 @@ import uuid
 from fastapi import FastAPI, Request
 
 from app.config import load_settings
+from app.db import create_tables, make_engine
 from app.errors import register_error_handlers
 from app.extraction import Extractor, make_groq_client
 from app.logger import setup_logging
@@ -20,6 +21,10 @@ app.include_router(router)
 
 # One shared Extractor for all requests, read by routes via get_extractor().
 app.state.extractor = Extractor(make_groq_client(settings.groq_api_key), settings.groq_model)
+
+# One shared database engine. Tables are created on first start.
+app.state.engine = make_engine(settings.database_url)
+create_tables(app.state.engine)
 
 
 @app.middleware("http")
