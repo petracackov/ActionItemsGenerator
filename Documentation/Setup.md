@@ -41,4 +41,16 @@ Backend (from `backend/`):
 uv run pytest
 ```
 
+Groq is faked in these tests, so they need no key and make no API calls.
+
+### Extraction quality (optional)
+
+Measures how well the model extracts action items, using the **real** Groq API (uses your key and free-tier quota). Run it after changing the prompt or `GROQ_MODEL`. From `backend/`:
+
+```bash
+uv run python eval/run_eval.py --runs 3
+```
+
+It sends each sample note from [Assignment.md](Assignment.md#sample-input) to the model several times and checks the result against the expected items in `backend/eval/expected.json`. It prints which items were found, a score (e.g. `30/30 (100%)`) and latency. If a run shows `ERROR llm_rate_limited`, wait a minute or use `--runs 1`.
+
 Mac app: _TBD_
