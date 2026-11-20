@@ -27,6 +27,7 @@ struct NotesSplitView: View {
         } detail: {
             detail
         }
+        .frame(minWidth: 720, minHeight: 460)
     }
 
     @ViewBuilder
