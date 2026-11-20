@@ -1,0 +1,28 @@
+{
+  "_about": "Expected action items for the sample notes in Documentation/Assignment.md. An item counts as found if any extracted item's text contains one of its keywords (case-insensitive). 'required' items must be found; 'optional' ones are judgment calls, reported but not scored.",
+  "samples": {
+    "Sample 1": {
+      "required": {
+        "retry logic (Ana)": ["retry", "connection pool"],
+        "accounts for new starter (Tomaz)": ["account"],
+        "laptop for new starter": ["laptop"],
+        "copy from marketing (Marko)": ["marketing", "copy"],
+        "read Q3 numbers": ["q3"],
+        "don't skip the retro": ["retro"],
+        "reset staging db": ["staging"]
+      },
+      "optional": {}
+    },
+    "Sample 2": {
+      "required": {
+        "check SSO with product": ["sso"],
+        "pull export numbers (Ana)": ["50k", "export numbers", "how long exports", "export time", "export duration"],
+        "walkthrough for new ops lead": ["walkthrough", "ops lead"]
+      },
+      "optional": {
+        "address export speed before renewal": ["renewal", "march", "get ahead"],
+        "pass on invite-without-admin request": ["admin", "invite"]
+      }
+    }
+  }
+}
