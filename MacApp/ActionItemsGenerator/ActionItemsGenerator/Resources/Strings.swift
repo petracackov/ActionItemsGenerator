@@ -7,7 +7,6 @@
 
 /// All user-facing text.
 enum Strings {
-    static let notesTitle = "Notes"
     static let newNote = "New Note"
     static let untitledNote = "Untitled note"
     static let extract = "Extract"
@@ -26,6 +25,6 @@ enum Strings {
     static let tryAgain = "Try Again"
     static let reload = "Reload"
 
-    static let cannotReachServer = "Can't reach the server at localhost:8000."
+    static let cannotReachServer = "Can't reach the server. Check that the backend is running."
     static let unexpectedError = "Something went wrong. Please try again."
 }

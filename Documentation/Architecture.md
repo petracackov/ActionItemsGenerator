@@ -59,6 +59,42 @@ flowchart LR
 | **Repository** | The only code that touches the DB. Saves a note and its items in one transaction. Always filters by `created_by`. |
 | **Logger** | Writes the full note and the raw LLM response for every attempt, including failures. |
 
+## Mac app (v1)
+
+SwiftUI, macOS 26+. Source: `MacApp/ActionItemsGenerator/ActionItemsGenerator/`.
+
+```mermaid
+flowchart LR
+    subgraph views [Screens]
+        split[NotesSplitView<br/>sidebar list + detail]
+        detail[NoteDetailView]
+        newnote[NewNoteView]
+    end
+    store[NotesStore.shared<br/>notes + selected note]
+    api[APIManager / APIRequest]
+    be[Backend]
+
+    split -- NotesViewModel --> store
+    detail -- NoteDetailViewModel --> store
+    newnote -- NewNoteViewModel --> store
+    split -- NotesViewModel --> api
+    detail -- NoteDetailViewModel --> api
+    newnote -- NewNoteViewModel --> api
+    api -- HTTP / JSON --> be
+```
+
+| Part | Responsibility |
+|---|---|
+| **Screens** (`Sources/Features/`) | One folder per screen, holding its view and ViewModel. Each view creates and owns its ViewModel; child views get plain values or closures. |
+| **NotesStore** (`Sources/Store/`) | Shared singleton and the single source of truth for the notes and the selected note. `@Published` properties; ViewModels subscribe with Combine. |
+| **APIManager / APIRequest** (`Sources/Networking/`) | Builds the request for each endpoint, sends it with `URLSession`, decodes JSON (snake_case, ISO 8601 dates). Every failure becomes a typed `APIError`; backend error bodies decode into `ServerError`. |
+| **Strings / Icons** (`Resources/`) | All user-facing text and SF Symbol names. |
+
+**Flows:**
+- **Load / reload:** `NotesViewModel.loadNotes()` runs at launch and from the reload button (⌘R). It calls `GET /notes` and puts the result in the store. The sidebar shows a spinner, the list, or an error with Try Again (`LoadState`).
+- **Extract:** `NewNoteViewModel` sends the editor text to `POST /notes/extract`. On success the note is added to the store and selected; on failure the error is shown and the draft is kept.
+- **Mark done:** `NoteDetailViewModel` flips the item in the store right away, so the UI never waits. At most one `PATCH /items/{id}` runs per item; when it finishes, one more is sent if the user clicked again meanwhile (latest click wins). A failed save puts the item back.
+
 ## API (v1)
 
 Request and response JSON: [API.md](API.md).

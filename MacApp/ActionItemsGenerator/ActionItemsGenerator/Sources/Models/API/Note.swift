@@ -30,15 +30,6 @@ struct Note: Codable, Identifiable, Hashable {
         return note
     }
 
-    /// `text` with its inline markdown (bold, italic, code, strikethrough, links) applied.
-    /// Line breaks are kept. Headings and lists stay as typed, since `Text` only renders inline styles.
-    var formattedText: AttributedString {
-        let options = AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        // Inline-only parsing accepts any text, so this practically never fails;
-        // if it does, show the raw text rather than nothing.
-        return (try? AttributedString(markdown: text, options: options)) ?? AttributedString(text)
-    }
-
     /// First non-empty line of the raw notes.
     var title: String? {
         text.split(whereSeparator: \.isNewline)

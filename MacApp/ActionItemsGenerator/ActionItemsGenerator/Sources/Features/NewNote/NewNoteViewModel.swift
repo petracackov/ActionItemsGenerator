@@ -12,7 +12,6 @@ import Observation
 class NewNoteViewModel {
 
     private let notesStore = NotesStore.shared
-    /// Plain text. Markdown typed here (e.g. `**bold**`) is sent as is and rendered in the note detail.
     var draftText = ""
 
     private(set) var isExtracting = false

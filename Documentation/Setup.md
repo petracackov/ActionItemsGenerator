@@ -4,7 +4,7 @@ How to run and try the project locally.
 
 ## Prerequisites
 
-- macOS 14+ and Xcode
+- macOS 26+ and Xcode 27 (the project uses Xcode 27's project format)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) (installs Python for you):
   ```bash
   curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -24,7 +24,13 @@ Check: http://127.0.0.1:8000/health returns `{"status":"ok"}`. API docs: http://
 
 ## 2. Mac app
 
-_TBD_
+Start the backend first (step 1). The app talks to it at `http://127.0.0.1:8000`.
+
+1. Open `MacApp/ActionItemsGenerator/ActionItemsGenerator.xcodeproj` in Xcode.
+2. Signing: select the **ActionItemsGenerator** target → **Signing & Capabilities** → pick your own **Team**, or choose **Sign to Run Locally**. The project is set up with the author's team, which won't work on another Mac.
+3. Run with **⌘R**.
+
+If the backend isn't running, the sidebar shows "Can't reach the server. Check that the backend is running." with a **Try Again** button.
 
 ## 3. Try it
 
@@ -53,4 +59,4 @@ uv run python eval/run_eval.py --runs 3
 
 It sends each sample note from [Assignment.md](Assignment.md#sample-input) to the model several times and checks the result against the expected items in `backend/eval/expected.json`. It prints which items were found, a score (e.g. `30/30 (100%)`) and latency. If a run shows `ERROR llm_rate_limited`, wait a minute or use `--runs 1`.
 
-Mac app: _TBD_
+Mac app: no tests. Testing time went to the backend, where the extraction and failure handling live.

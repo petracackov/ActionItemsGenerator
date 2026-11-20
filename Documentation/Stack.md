@@ -20,10 +20,10 @@ Tools and libraries used. Reasons for the main choices: [Decisions.md](Decisions
 
 | What | Choice |
 |---|---|
-| UI | SwiftUI, macOS 14+ |
-| Networking | `URLSession` + `Codable` |
-| State | `@Observable` |
-| Tests | Swift Testing / XCTest |
+| UI | SwiftUI, macOS 26+ (Xcode 27) |
+| Networking | `URLSession` + `Codable`, async/await |
+| State | `@Observable` ViewModels, one shared `NotesStore` (`ObservableObject`) observed with Combine |
+| Tests | None for the Mac app (backend is tested) |
 
 No third-party Swift packages.
 

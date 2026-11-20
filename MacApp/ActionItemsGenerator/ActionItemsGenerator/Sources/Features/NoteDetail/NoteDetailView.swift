@@ -54,7 +54,7 @@ struct NoteDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(Strings.originalNotes)
                 .font(.title3.bold())
-            Text(viewModel.note.formattedText)
+            Text(viewModel.note.text)
                 .font(.body.monospaced())
                 .textSelection(.enabled)
                 .padding(12)
