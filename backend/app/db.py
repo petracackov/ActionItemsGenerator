@@ -4,11 +4,13 @@ SQLModel = tables as Python classes (like SwiftData @Model). Each class with
 table=True becomes a table; each field becomes a column.
 """
 
+from collections.abc import Iterator
 from datetime import datetime
 from uuid import UUID, uuid4
 
+from fastapi import Request
 from sqlalchemy import event
-from sqlmodel import Field, Relationship, SQLModel, create_engine
+from sqlmodel import Field, Relationship, Session, SQLModel, create_engine
 
 
 class Note(SQLModel, table=True):
@@ -61,3 +63,12 @@ def make_engine(database_url: str):
 def create_tables(engine) -> None:
     """Create missing tables. Existing tables and data are left as they are."""
     SQLModel.metadata.create_all(engine)
+
+
+def get_session(request: Request) -> Iterator[Session]:
+    """FastAPI dependency: one database session per request, closed afterwards.
+
+    `yield` hands the session to the route; the code after it runs when the
+    request is done (the `with` block closes the session)."""
+    with Session(request.app.state.engine) as session:
+        yield session
