@@ -92,7 +92,7 @@ Key technical decisions: what we chose, the alternatives, and why. Overview: [Ar
 
 ## 7. Error handling defaults
 
-Open questions for the product owner. Until answered, these defaults apply (details in [ErrorHandling.md](ErrorHandling.md)):
+Defaults for cases the assignment doesn't specify (details in [ErrorHandling.md](ErrorHandling.md)):
 
 | Question | Default | Why |
 |---|---|---|
