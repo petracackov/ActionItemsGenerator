@@ -7,7 +7,7 @@ into them either succeeds or raises a ValidationError.
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, field_validator
 
 MAX_NOTE_CHARS = 10_000
 MAX_ITEMS = 50
@@ -72,6 +72,14 @@ class ExtractRequest(BaseModel):
 
     # Length rules are checked in the route, so it can return 422 vs 413.
     text: str
+
+
+class MarkDoneRequest(BaseModel):
+    # forbid: items are immutable, so {"done": true, "text": "..."} is rejected (422),
+    # not silently ignored. StrictBool: only true/false, not "yes" or 1.
+    model_config = ConfigDict(extra="forbid")
+
+    done: StrictBool
 
 
 class ActionItemOut(BaseModel):

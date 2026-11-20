@@ -1,16 +1,17 @@
 """API routes: the thin HTTP layer. Check input, call services, shape the response."""
 
 from datetime import UTC
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session
 
 from app.auth import current_user
-from app.db import Note, get_session
+from app.db import ActionItem, Note, get_session
 from app.errors import AppError
 from app.extraction import Extractor
 from app.repository import NoteRepository
-from app.schemas import MAX_NOTE_CHARS, ActionItemOut, ExtractRequest, NoteOut, NotesOut
+from app.schemas import MAX_NOTE_CHARS, ActionItemOut, ExtractRequest, MarkDoneRequest, NoteOut, NotesOut
 
 router = APIRouter()
 
@@ -18,6 +19,11 @@ router = APIRouter()
 def get_extractor(request: Request) -> Extractor:
     """Dependency: hands the route the shared Extractor. Tests replace this with a fake."""
     return request.app.state.extractor
+
+
+def to_item_out(item: ActionItem) -> ActionItemOut:
+    """Database row -> API response shape."""
+    return ActionItemOut(id=item.id, text=item.text, assignee=item.assignee, due=item.due, done=item.done)
 
 
 def to_note_out(note: Note) -> NoteOut:
@@ -30,10 +36,7 @@ def to_note_out(note: Note) -> NoteOut:
         id=note.id,
         text=note.text,
         created_at=created_at,
-        action_items=[
-            ActionItemOut(id=item.id, text=item.text, assignee=item.assignee, due=item.due, done=item.done)
-            for item in note.action_items
-        ],
+        action_items=[to_item_out(item) for item in note.action_items],
     )
 
 
@@ -67,3 +70,14 @@ def list_notes(
 ) -> NotesOut:
     notes = NoteRepository(session).list_for(user)
     return NotesOut(notes=[to_note_out(note) for note in notes])
+
+
+@router.patch("/items/{item_id}", response_model=ActionItemOut)
+def mark_item_done(
+    item_id: UUID,  # Not a valid UUID -> 422 automatically.
+    body: MarkDoneRequest,
+    session: Session = Depends(get_session),
+    user: str = Depends(current_user),
+) -> ActionItemOut:
+    item = NoteRepository(session).set_done(item_id=item_id, created_by=user, done=body.done)
+    return to_item_out(item)

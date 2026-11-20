@@ -4,6 +4,7 @@ Every query filters by `created_by`, so in v2 users only ever see their own note
 """
 
 from datetime import UTC, datetime
+from uuid import UUID
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
@@ -44,6 +45,25 @@ class NoteRepository:
             .options(selectinload(Note.action_items))
         )
         return list(self.session.exec(statement).all())
+
+    def set_done(self, *, item_id: UUID, created_by: str, done: bool) -> ActionItem:
+        """Mark an item done or undone. The only change allowed on an item.
+
+        Not found and "belongs to someone else" both give 404, so the response
+        never reveals that another user's item exists."""
+        statement = (
+            select(ActionItem)
+            .join(Note)
+            .where(ActionItem.id == item_id, Note.created_by == created_by)
+        )
+        item = self.session.exec(statement).first()
+        if item is None:
+            raise AppError(404, "not_found", "Action item not found.")
+
+        item.done = done
+        self._commit()
+        self.session.refresh(item)
+        return item
 
     def _commit(self) -> None:
         try:
