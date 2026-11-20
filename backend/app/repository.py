@@ -6,7 +6,8 @@ Every query filters by `created_by`, so in v2 users only ever see their own note
 from datetime import UTC, datetime
 
 from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import Session
+from sqlalchemy.orm import selectinload
+from sqlmodel import Session, col, select
 
 from app.db import ActionItem, Note
 from app.errors import AppError
@@ -32,6 +33,17 @@ class NoteRepository:
         self._commit()
         self.session.refresh(note)
         return note
+
+    def list_for(self, created_by: str) -> list[Note]:
+        """All notes of this user with their items, newest first."""
+        statement = (
+            select(Note)
+            .where(Note.created_by == created_by)
+            .order_by(col(Note.created_at).desc())
+            # Load all items in one extra query, instead of one query per note.
+            .options(selectinload(Note.action_items))
+        )
+        return list(self.session.exec(statement).all())
 
     def _commit(self) -> None:
         try:

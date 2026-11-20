@@ -10,7 +10,7 @@ from app.db import Note, get_session
 from app.errors import AppError
 from app.extraction import Extractor
 from app.repository import NoteRepository
-from app.schemas import MAX_NOTE_CHARS, ActionItemOut, ExtractRequest, NoteOut
+from app.schemas import MAX_NOTE_CHARS, ActionItemOut, ExtractRequest, NoteOut, NotesOut
 
 router = APIRouter()
 
@@ -58,3 +58,12 @@ def extract_note(
 
     note = NoteRepository(session).create(created_by=user, text=text, items=result.action_items)
     return to_note_out(note)
+
+
+@router.get("/notes", response_model=NotesOut)
+def list_notes(
+    session: Session = Depends(get_session),
+    user: str = Depends(current_user),
+) -> NotesOut:
+    notes = NoteRepository(session).list_for(user)
+    return NotesOut(notes=[to_note_out(note) for note in notes])

@@ -87,3 +87,8 @@ class NoteOut(BaseModel):
     text: str
     created_at: datetime
     action_items: list[ActionItemOut]
+
+
+class NotesOut(BaseModel):
+    # Wrapped in an object so fields like paging can be added later without breaking clients.
+    notes: list[NoteOut]
