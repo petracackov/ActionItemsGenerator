@@ -112,28 +112,40 @@ if [ "$problems" -gt 0 ]; then
   exit 1
 fi
 
-cat <<EOF
-All set. To run the project:
+echo "All checks passed."
+echo
 
-  1. Start the backend (leave this terminal open, Ctrl+C stops it):
+SIGNING_HINT='  Signing error? Target ActionItemsGenerator → Signing & Capabilities →
+  pick your own Team (automatic is fine) or "Sign to Run Locally".'
+
+answer="n"
+if [ -t 0 ]; then
+  read -rp "Start the backend and open the Mac app in Xcode now? [Y/n] " answer
+  echo
+fi
+
+case "$answer" in
+  n|N)
+    cat <<EOF
+To run the project yourself:
+
+  1. Start the backend (keep that terminal open while you use the app, Ctrl+C stops it):
        cd backend && uv run uvicorn app.main:app
 
-  2. Open the Mac app and run it with ⌘R:
+  2. Open the Mac app in Xcode and press ⌘R:
        open "$XCODE_PROJECT"
-     If Xcode shows a signing error: target ActionItemsGenerator → Signing & Capabilities →
-     pick your own Team (automatic signing is fine) or "Sign to Run Locally".
+$(echo "$SIGNING_HINT" | sed 's/^/   /')
 
 More details: Documentation/Setup.md
 EOF
-
-if [ -t 0 ]; then
-  echo
-  read -rp "Open the Xcode project and start the backend now? [Y/n] " answer
-  case "$answer" in
-    n|N) ;;
-    *)
-      open "$XCODE_PROJECT"
-      cd "$BACKEND" && exec uv run uvicorn app.main:app
-      ;;
-  esac
-fi
+    ;;
+  *)
+    open "$XCODE_PROJECT"
+    echo "Opening Xcode. When it's open, press ⌘R to run the app."
+    echo "$SIGNING_HINT"
+    echo
+    echo "Starting the backend. Keep this terminal open while you use the app. Ctrl+C stops it."
+    echo
+    cd "$BACKEND" && exec uv run uvicorn app.main:app
+    ;;
+esac
