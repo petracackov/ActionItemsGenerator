@@ -16,12 +16,14 @@ Take-home test project for a job application. Timebox: 4 hours (graded on what's
 - **Backend:** the user is new to backend development. Explain what you're doing and why (concepts, tools, commands) more often and in plain terms.
 - **Swift / macOS:** the user is a senior iOS engineer. No long explanations; only call out non-obvious decisions.
 - **General:** no fluff. Short, correct, to the point.
+- **Questions aren't instructions:** when the user asks a question, even with an opinion ("I think we only need X"), answer it and stop. Change files only after an explicit request.
 - **Docs location:** put all documentation and plans in the `Documentation/` folder. `AGENTS.md` holds only rules and pointers to those files, never documentation content. Exception: the root `README.md`, which holds only what the assignment requires. Add nothing extra unless the user asks.
 - **Document as you go:** document features, stack, libraries and key decisions in `Documentation/`. Always ask the user before adding or changing any documentation.
 
 ## Swift / SwiftUI (Mac app)
 
 - **No tests** for the Mac app.
+- **No accessibility code** (labels, hints, traits, custom actions). Rely on SwiftUI's defaults.
 
 ### Swift + SwiftUI conventions
 
@@ -46,6 +48,7 @@ Take-home test project for a job application. Timebox: 4 hours (graded on what's
 - Prefer composition over inheritance and over configuration flags. Split into smaller views when options multiply.
 - Flow: `View -> ViewModel (optional)`. Add a ViewModel only when the screen has real logic.
 - ViewModel state uses `@Observable`, not `ObservableObject`/`@Published`. ViewModels are not `final` by default.
+- Never pass a ViewModel into another view. Each screen or component creates and owns its own (`@State private var viewModel = XViewModel()`). Child views get plain values, bindings or closures, never a parent's ViewModel.
 - View-local UI state lives in `@State`.
 - Concurrency: the target's default actor isolation is `MainActor`, so don't annotate types with `@MainActor`. Mark non-UI work `nonisolated` explicitly.
 - async/await by default. No Combine unless required.
@@ -69,7 +72,7 @@ Take-home test project for a job application. Timebox: 4 hours (graded on what's
 - Exception for views: conditional rendering uses a single-branch `if`, never `else { EmptyView() }`.
 - Prefer `!condition` over `condition == false`.
 - No raw string literals for identifiers and keys (image names, storage keys, type identifiers). Use centralized constants or type-safe enums.
-- Nest child model types inside the parent when they aren't reused elsewhere.
+- Nest a type inside its parent only when no other file uses it. A type used in several files (e.g. a selection enum) gets its own file; never reference nested types like `NotesViewModel.Selection` from other files.
 - Put extensions in the same file as their type unless there's a clear organizing reason.
 - New methods are `private` by default. Widen only when needed.
 - No custom `init` when the synthesized one is enough.
@@ -79,19 +82,18 @@ Take-home test project for a job application. Timebox: 4 hours (graded on what's
 
 Under `MacApp/ActionItemsGenerator/ActionItemsGenerator/`:
 
-- `Views/`: SwiftUI views, one folder per screen when it has supporting files.
-- `ViewModels/`: `@Observable` ViewModels.
-- `Models/`: `Codable` types matching the API.
-- `Networking/`: the backend client.
-- `Modifiers/`, `Styles/`: custom view modifiers and styles, if any.
-- `Extensions/`: one file per extended type, named `<Type>+<Topic>.swift`.
+- `Sources/Features/<Feature>/`: one folder per feature, screen or component, holding its views and ViewModel together (e.g. `Notes/`, `NoteList/`, `NoteDetail/`).
+- `Sources/Models/`: `Codable` types matching the API.
+- `Sources/Networking/`: the backend client.
+- `Sources/Modifiers/`, `Sources/Styles/`: custom view modifiers and styles, if any.
+- `Sources/Extensions/`: one file per extended type, named `<Type>+<Topic>.swift`.
 - `Resources/`: asset catalog, the text and icon enums/structs, constants.
 
 Keep code in the closest relevant folder. Promote it to a shared folder only when it's reused.
 
 ### Text
 
-- All user-facing text (including accessibility labels) lives in one file, in one enum/struct. No string literals in views.
+- All user-facing text lives in one file, in one enum/struct. No string literals in views.
 
 ### Icons
 
