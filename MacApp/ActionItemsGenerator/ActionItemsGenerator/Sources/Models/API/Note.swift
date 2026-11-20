@@ -23,6 +23,13 @@ struct Note: Codable, Identifiable, Hashable {
         var done: Bool
     }
 
+    /// A copy of this note with `item` swapped in for the action item with the same ID.
+    func replacingItem(_ item: ActionItem) -> Note {
+        var note = self
+        note.actionItems = actionItems.map { $0.id == item.id ? item : $0 }
+        return note
+    }
+
     /// First non-empty line of the raw notes.
     var title: String? {
         text.split(whereSeparator: \.isNewline)

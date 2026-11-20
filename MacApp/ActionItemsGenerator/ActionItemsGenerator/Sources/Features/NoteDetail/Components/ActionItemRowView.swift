@@ -9,11 +9,15 @@ import SwiftUI
 
 struct ActionItemRowView: View {
     let item: Note.ActionItem
+    let onToggleDone: () -> Void
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Image(systemName: item.done ? Icons.done : Icons.notDone)
-                .foregroundStyle(item.done ? Color.accentColor : Color.secondary)
+            Button(action: onToggleDone) {
+                Image(systemName: item.done ? Icons.done : Icons.notDone)
+                    .foregroundStyle(item.done ? Color.accentColor : Color.secondary)
+            }
+            .buttonStyle(.plain)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.text)
@@ -42,8 +46,8 @@ struct ActionItemRowView: View {
 
 #Preview {
     VStack(spacing: 10) {
-        ActionItemRowView(item: Note.samples[0].actionItems[0])
-        ActionItemRowView(item: Note.samples[0].actionItems[1])
-        ActionItemRowView(item: Note.samples[0].actionItems[2])
+        ActionItemRowView(item: Note.samples[0].actionItems[0], onToggleDone: {})
+        ActionItemRowView(item: Note.samples[0].actionItems[1], onToggleDone: {})
+        ActionItemRowView(item: Note.samples[0].actionItems[2], onToggleDone: {})
     }
 }

@@ -5,6 +5,7 @@ import SwiftUI
         WindowGroup {
             NotesSplitView()
         }
+        .windowResizability(.contentMinSize)
         .commands {
             TextFormattingCommands()
         }

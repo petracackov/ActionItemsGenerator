@@ -34,4 +34,23 @@ class NotesStore: ObservableObject {
     func select(_ note: Note?) {
         selectedNote = note
     }
+
+    /// Swaps in an updated action item (e.g. after marking it done) in `note`,
+    /// and in `selectedNote` when that's the same note.
+    func replaceItem(_ item: Note.ActionItem, in note: Note) {
+        guard let index = notes.firstIndex(where: { $0.id == note.id }) else {
+            return
+        }
+
+        let editedNote = notes[index].replacingItem(item)
+        var updatedNotes = notes
+        updatedNotes[index] = editedNote
+
+        notes = updatedNotes
+
+        if selectedNote?.id == note.id {
+            selectedNote = editedNote
+        }
+
+    }
 }
