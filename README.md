@@ -6,7 +6,9 @@ A macOS app where you paste raw meeting notes. A backend sends them to an LLM an
 
 ## 1. How to run the project
 
-Needs macOS 26+, Xcode 27 and a free Groq API key. From the project folder, run:
+Needs macOS 26+, Xcode 27 and a free Groq API key. To get the key: open [console.groq.com/keys](https://console.groq.com/keys), sign in or create a free account, click **Create API Key**, give it any name and copy the key (it's shown only once). The setup script asks for it.
+
+From the project folder, run:
 
 ```bash
 ./setup.sh

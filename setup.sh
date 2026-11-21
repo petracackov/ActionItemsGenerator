@@ -66,7 +66,10 @@ fi
 
 current_key="$(grep -E '^GROQ_API_KEY=' "$ENV_FILE" | head -1 | cut -d= -f2- | tr -d '[:space:]')"
 if [ -z "$current_key" ] && [ -t 0 ]; then
-  echo "  No Groq API key yet. Paste it here (input is hidden), or press Enter to skip:"
+  echo "  No Groq API key yet. To get a free one:"
+  echo "    1. Open https://console.groq.com/keys and sign in (or create a free account)."
+  echo "    2. Click 'Create API Key', give it any name, and copy the key (it's shown only once)."
+  echo "  Paste it here (input is hidden), or press Enter to skip:"
   read -rs current_key
   echo
   if [ -n "$current_key" ]; then
